@@ -1,0 +1,66 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+// If your directory matches the name, you do not need to set archivesBaseName.
+archivesBaseName = "coollib"
+
+install {
+  repositories.mavenInstaller {
+    pom.project {
+      group "in.curium.coollib"
+      artifactId "coollib"
+      version "1.0.0"
+    }
+  }
+}
+
+android {
+  compileSdkVersion 24
+  buildToolsVersion "24.0.2"
+
+  defaultConfig {
+    minSdkVersion 16
+    targetSdkVersion 24
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  compile 'com.android.support:appcompat-v7:24.2.1'
+  testCompile 'junit:junit:4.12'
+}
+
+bintray {
+  user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') :
+      System.getenv('BINTRAY_USER')
+  key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') :
+      System.getenv('BINTRAY_API_KEY')
+  // jFrog plugin must be declared for this line to work
+  configurations = ['archives']
+  // Package info for BinTray
+  pkg {
+    repo = 'maven'
+    name = 'coollib'
+    userOrg = user
+    licenses = ['Apache-2.0']
+    vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+    version {
+      name = '0.1'
+      desc = 'Gradle Bintray Plugin 1.0 final'
+      vcsTag = '0.1'
+    }
+  }
+}
